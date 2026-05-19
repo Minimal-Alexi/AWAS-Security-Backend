@@ -24,7 +24,8 @@ export class User {
             session_id: createToken(this.id),
             firstName: this.firstName,
             lastName: this.lastName,
-            email: this.email
+            email: this.email,
+            valuation: this.valuation,
         };
     }
 }
