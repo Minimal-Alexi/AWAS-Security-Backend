@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { findUserByEmail, createUser } from '../service/user.service';
+import { findUserByEmail, createUser, findUserById, moveMoney } from '../service/user.service';
 import bcrypt from 'bcrypt';
 import { NR_OF_SALTING_ROUNDS } from '../config/constants';
 
@@ -50,6 +50,31 @@ const loginUser = async (req: Request, res: Response) => {
     } catch (error) {
         console.error('Error logging in user:', error);
         res.status(500).json({ error: 'Failed to login user' });
+    }
+}
+
+const transferMoney = async (req:Request, res:Response) => {
+    const {userID,targetUserId,transfer} = req.body;
+    try{
+        const targetUser = await findUserById(targetUserId);
+        if(!targetUser){
+            return res.status(404).json({"message":"Couldn't find target bank account."})
+        }
+        const user = await findUserById(userID)
+        if(!user){
+            return res.status(404).json({"message":"Couldn't find your bank account."})
+        }
+
+        const transaction = await moveMoney(user,targetUser,transfer)
+
+        if(!transaction){
+            return res.status(400).json({"message":"Didn't have enough money for transaction."})
+        }
+        
+        return res.status(200).json({"messsage":"Successfully completed transfer."})
+    }catch(error){
+        console.error('Error transferring money:', error);
+        res.status(500).json({ error: 'Failed to transfer money.' });
     }
 }
 
