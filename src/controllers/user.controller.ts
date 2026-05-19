@@ -53,29 +53,48 @@ const loginUser = async (req: Request, res: Response) => {
     }
 }
 
-const transferMoney = async (req:Request, res:Response) => {
-    const {userID,targetUserId,transfer} = req.body;
-    try{
+const transferMoney = async (req: Request, res: Response) => {
+    const { userID } = req.body;
+
+    const targetUserId = Number(req.params.targetUserId);
+    const transfer = Number(req.params.transfer);
+
+    try {
         const targetUser = await findUserById(targetUserId);
-        if(!targetUser){
-            return res.status(404).json({"message":"Couldn't find target bank account."})
-        }
-        const user = await findUserById(userID)
-        if(!user){
-            return res.status(404).json({"message":"Couldn't find your bank account."})
+
+        if (!targetUser) {
+            return res.status(404).json({
+                message: "Couldn't find target bank account."
+            });
         }
 
-        const transaction = await moveMoney(user,targetUser,transfer)
+        const user = await findUserById(userID);
 
-        if(!transaction){
-            return res.status(400).json({"message":"Didn't have enough money for transaction."})
+        if (!user) {
+            return res.status(404).json({
+                message: "Couldn't find your bank account."
+            });
         }
-        
-        return res.status(200).json({"messsage":"Successfully completed transfer."})
-    }catch(error){
+
+        const transaction = await moveMoney(user, targetUser, transfer);
+
+        if (!transaction) {
+            return res.status(400).json({
+                message: "Didn't have enough money for transaction."
+            });
+        }
+
+        return res.status(200).json({
+            message: "Successfully completed transfer."
+        });
+
+    } catch (error) {
         console.error('Error transferring money:', error);
-        res.status(500).json({ error: 'Failed to transfer money.' });
-    }
-}
 
-export { registerUser,loginUser };
+        return res.status(500).json({
+            error: 'Failed to transfer money.'
+        });
+    }
+};
+
+export { registerUser,loginUser, transferMoney };
