@@ -1,8 +1,10 @@
-import jwt from 'jsonwebtoken';
 import { SECRET } from '../config/constants';
 
+// NEVER DO THIS LMAO
 const createToken = (_id:number) => {
-  return jwt.sign({ _id }, SECRET, { expiresIn: '3d' });
+  return _id
 }
+
+
 
 export default createToken;
