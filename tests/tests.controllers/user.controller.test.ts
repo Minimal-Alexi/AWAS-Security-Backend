@@ -18,10 +18,10 @@ const pool = require('../../src/config/database').pool;
 
 beforeEach(async () => {
   await pool.query(`
-    INSERT INTO users (username, email, password)
+    INSERT INTO users (first_name,last_name, email, password,valuation,admin)
     VALUES
-      ('test1', 'test1@example.com', '${bcrypt.hashSync('password1', NR_OF_SALTING_ROUNDS).toString()}'),
-      ('test2', 'test2@example.com', '${bcrypt.hashSync('password2', NR_OF_SALTING_ROUNDS).toString()}');
+      ('testerson', 'b', 'test1@example.com', '${bcrypt.hashSync('password1', NR_OF_SALTING_ROUNDS).toString()}', '5000', 'false'),
+      ('testerina', 'b', 'test2@example.com', '${bcrypt.hashSync('password2', NR_OF_SALTING_ROUNDS).toString()}', '5000', 'false');
   `);
 });
 
@@ -30,9 +30,12 @@ describe('User Controller', () => {
     describe('User Registration', () => {
       it('Should register a new user', async () => {
         const user = {
-          username: 'newuser',
+          firstName: 'newuser',
+          lastName: 'evenNewerUser',
           email: 'newuser@example.com',
-          password: 'newpassword'
+          password: 'newpassword',
+          valuation: 10000000000000,
+          admin: false
         };
         await api
           .post('/api/v1/users/register')
@@ -41,16 +44,19 @@ describe('User Controller', () => {
           .expect('Content-Type', /application\/json/)
           .expect(res => {
             expect(res.body.user).toHaveProperty('session_id');
-            expect(res.body.user).toHaveProperty('username', user.username);
+            expect(res.body.user).toHaveProperty('firstName', user.firstName);
             expect(res.body.user).toHaveProperty('email', user.email);
             expect(res.body.user).not.toHaveProperty('password');
           });
       });
       it('Should not register a user with existing email', async () => {
         const user = {
-          username: 'test1',
+          firstName: 'newuser',
+          lastName: 'evenNewerUser',
           email: 'test1@example.com',
-          password: 'password1'
+          password: 'newpassword',
+          valuation: 10000000000000,
+          admin: false
         };
         await api
           .post('/api/v1/users/register')
@@ -61,9 +67,12 @@ describe('User Controller', () => {
       );
       it("Should salt the passwords", async () => {
         const user = {
-          username: 'salteduser',
+          firstName: 'salteduser',
+          lastName: "s",
           email: 'saltedemail@example.com',
-          password: 'saltedpassword'
+          password: 'saltedpassword',
+          valuation: 10000000000000,
+          admin: false
         };
         await api
           .post('/api/v1/users/register')

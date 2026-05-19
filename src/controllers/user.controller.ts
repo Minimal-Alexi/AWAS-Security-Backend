@@ -4,10 +4,14 @@ import bcrypt from 'bcrypt';
 import { NR_OF_SALTING_ROUNDS } from '../config/constants';
 
 const registerUser = async (req: Request, res: Response) => {
-    const { username, email, password } = req.body;
+    const { firstName, lastName, email, password, valuation, admin } = req.body;
     try {
-        if (!username || !email || !password) {
+        if (!firstName || !lastName || !email || !password || !valuation) {
             return res.status(400).json({ "message": "Username, email and password are required" });
+        }
+        let isAdmin = true;
+        if(!admin){
+            isAdmin = false;
         }
 
         if (await findUserByEmail(email)) {
@@ -18,7 +22,7 @@ const registerUser = async (req: Request, res: Response) => {
             return res.status(400).json({ "message": "Invalid email format" });
         }
 
-        const user = await createUser(username, email, bcrypt.hashSync(password, NR_OF_SALTING_ROUNDS).toString());
+        const user = await createUser(firstName,lastName, email, bcrypt.hashSync(password, NR_OF_SALTING_ROUNDS).toString(),valuation,isAdmin);
         res.status(201).json({
             "message": "User registered successfully",
             "user": user.toJSON()

@@ -7,34 +7,36 @@ export function createTestDb() {
 -- USERS TABLE
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
-    username VARCHAR(64) NOT NULL UNIQUE,
+    first_name VARCHAR(64) NOT NULL,
+    last_name VARCHAR(64) NOT NULL,
     email VARCHAR(128) NOT NULL UNIQUE,
-    password VARCHAR(256) NOT NULL
+    password VARCHAR(256) NOT NULL,
+    valuation INTEGER DEFAULT 0,
+    admin BOOLEAN DEFAULT FALSE
 );
 
--- GAME TABLE
-CREATE TABLE game (
-    game_id SERIAL PRIMARY KEY,
-    turn_counter INTEGER NOT NULL DEFAULT 0,
-    team_turn VARCHAR(20) NOT NULL
-);
-
--- PLAYER (JOIN TABLE: users <-> game)
-CREATE TABLE player (
+-- SUPPORT CHAT TABLE
+CREATE TABLE support_chat (
+    support_chat_id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
-    game_id INTEGER NOT NULL,
-    team VARCHAR(20) NOT NULL,
-
-    PRIMARY KEY (user_id, game_id),
-
-    CONSTRAINT fk_player_user
+    
+    CONSTRAINT fk_support_chat_user
         FOREIGN KEY (user_id)
         REFERENCES users(user_id)
-        ON DELETE CASCADE,
+        ON DELETE CASCADE
+);
 
-    CONSTRAINT fk_player_game
-        FOREIGN KEY (game_id)
-        REFERENCES game(game_id)
+-- MESSAGE TABLE
+CREATE TABLE message (
+    message_id SERIAL PRIMARY KEY,
+    support_chat_id INTEGER NOT NULL,
+    order_nr INTEGER,
+    text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_message_chat
+        FOREIGN KEY (support_chat_id)
+        REFERENCES support_chat(support_chat_id)
         ON DELETE CASCADE
 );
   `);

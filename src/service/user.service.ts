@@ -13,9 +13,12 @@ export const findUserById = async (id: number): Promise<User | null> => {
 
     return new User(
         row.user_id,
-        row.username,
+        row.first_name,
+        row.last_name,
         row.email,
-        row.password
+        row.password,
+        row.valuation,
+        row.admin
     );
 }
 
@@ -30,24 +33,35 @@ export const findUserByEmail = async (email: string): Promise<User | null> => {
 
     return new User(
         row.user_id,
-        row.username,
+        row.first_name,
+        row.last_name,
         row.email,
-        row.password
+        row.password,
+        row.valuation,
+        row.admin
     );
 }
 
-export const createUser = async (username: string, email: string, password: string): Promise<User> => {
+export const createUser = async (firstName:string,
+     lastName:string,
+     email:string,
+     password: string,
+     valuation: number,
+     admin:boolean): Promise<User> => {
     const result = await pool.query(
-        'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING *',
-        [username, email, password]
+        'INSERT INTO users (first_name,last_name, email, password,valuation,admin) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
+        [firstName, lastName, email, password, valuation, admin]
     );
     
     const row = result.rows[0];
 
     return new User(
         row.user_id,
-        row.username,
+        row.first_name,
+        row.last_name,
         row.email,
-        row.password
+        row.password,
+        row.valuation,
+        row.admin
     );
 }
