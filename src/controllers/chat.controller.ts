@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import { createSupportChat, getAllMyChats } from '../service/chat.service';
+import { createSupportChat, findChatById, getAllMyChats } from '../service/chat.service';
 import { findUserById } from '../service/user.service';
+import { createMessageForChat } from '../service/message.service';
 
 export const createSupportTicket = async(req:Request, res:Response) => {
     try{
@@ -18,8 +19,19 @@ export const createSupportTicket = async(req:Request, res:Response) => {
 }
 export const createMessage = async(req:Request, res:Response) => {
     try{
+        const userId = req.body.userID;
+        const chatId = Number(req.params.supportChatId);
+        const user = await findUserById(userId)
+        const chat = await findChatById(chatId)
+        if(!user || !chat){
+            return res.status(404)
+        }
+
+        const message = await createMessageForChat(chatId,user,req.body.text);
+        return res.status(201).json({message:"Successfully created message.", supportMessage: message.toJSON()})
 
     }catch(error){
+        console.error(error);
         return res.status(500).json({error:"Server error."})
     }
 }

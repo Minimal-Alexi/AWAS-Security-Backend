@@ -19,7 +19,7 @@ export const getAllMessagesFromChat = async (id:number):Promise<Array<Message>> 
             ORDER BY m.order_nr ASC;`, [id]);
 
     const chatMessages:Array<Message> = [];
-    for(const message of result){
+    for(const message of result.rows){
         const user = new User(message.user_id,message.first_name,message.last_name,"irrelevant","irrelevant",0,message.admin);
         chatMessages.push(new Message(message.message_id,message.support_chat_id,user,message.order,message.text))
     }
