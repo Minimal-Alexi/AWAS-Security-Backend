@@ -15,3 +15,6 @@ export const getMySupportChatById = async(req:Request, res:Response) => {
 export const getMySupportChats = async(req:Request, res:Response) => {
 
 }
+export const getAllSupportChats = async(req:Request, res:Response) => {
+    
+}
