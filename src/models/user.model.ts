@@ -26,6 +26,7 @@ export class User {
             lastName: this.lastName,
             email: this.email,
             valuation: this.valuation,
+            admin:this.admin,
         };
     }
 }

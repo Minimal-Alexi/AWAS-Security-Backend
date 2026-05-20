@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { findUserByEmail, createUser, findUserById, moveMoney } from '../service/user.service';
 import bcrypt from 'bcrypt';
-import { NR_OF_SALTING_ROUNDS } from '../config/constants';
 
 const registerUser = async (req: Request, res: Response) => {
     const { firstName, lastName, email, password, valuation, admin } = req.body;
@@ -22,7 +21,7 @@ const registerUser = async (req: Request, res: Response) => {
             return res.status(400).json({ "message": "Invalid email format" });
         }
 
-        const user = await createUser(firstName,lastName, email, bcrypt.hashSync(password, NR_OF_SALTING_ROUNDS).toString(),valuation,isAdmin);
+        const user = await createUser(firstName,lastName, email, bcrypt.hashSync(password, 10).toString(),valuation,isAdmin);
         res.status(201).json({
             "message": "User registered successfully",
             "user": user.toJSON()
