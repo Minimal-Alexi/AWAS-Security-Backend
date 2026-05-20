@@ -12,9 +12,9 @@ export const getAllMessagesFromChat = async (id:number):Promise<Array<Message>> 
             m.order_nr,
             u.first_name,
             u.last_name,
-            u.admin,
-            FROM messages m
-            JOIN users u ON u.id = m.user_id
+            u.admin
+            FROM message m
+            JOIN users u ON u.user_id = m.user_id
             WHERE m.support_chat_id = $1
             ORDER BY m.order_nr ASC;`, [id]);
 
