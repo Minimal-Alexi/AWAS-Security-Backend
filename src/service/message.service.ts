@@ -29,7 +29,7 @@ export const findMaxOrderFromChat = async(chatId:number):Promise<number> => {
       const orderResult = await pool.query(
     `
     SELECT COALESCE(MAX(order_nr), 0) + 1 AS next_order
-    FROM messages
+    FROM message
     WHERE support_chat_id = $1;
     `,
     [chatId]

@@ -1,10 +1,18 @@
 import { Request, Response } from 'express';
-import { getAllMyChats } from '../service/chat.service';
+import { createSupportChat, getAllMyChats } from '../service/chat.service';
+import { findUserById } from '../service/user.service';
 
 export const createSupportTicket = async(req:Request, res:Response) => {
     try{
-
+        const userId = req.body.userID;
+        const user = await findUserById(userId)
+        if(!user){
+            return res.status(404)
+        }
+        const supportChat = await createSupportChat(user,req.body.message);
+        return res.status(201).json({message:"Successfully created support ticket", supportChat: supportChat.toJSON()})
     }catch(error){
+        console.error(error);
         return res.status(500).json({error:"Server error."})
     }
 }
