@@ -1,5 +1,6 @@
 import { Chat } from "../models/chat.model";
-import { getAllMessagesFromChat } from "./message.service";
+import { User } from "../models/user.model";
+import { createMessageForChat, getAllMessagesFromChat } from "./message.service";
 
 const pool = require('../config/database').pool;
 export const findChatById = async(id:number):Promise<Chat | null> => {
@@ -17,10 +18,18 @@ export const findChatById = async(id:number):Promise<Chat | null> => {
         messages
     )
 }
-export const createSupportChat = async() => {
+export const createSupportChat = async(user:User, initialMessage:string):Promise<Chat> => {
+    const result = await pool.query(`INSERT INTO support_chat (user_id) VALUES ($1) RETURNING *`,[user.id])
+    const chatRow = result.rows[0];
 
+    const chat = new Chat(user.id,chatRow.support_chat_id,[]);
+
+    const startingMessage = await createMessageForChat(chat.supportChatId,user,initialMessage);
+    chat.messages.push(startingMessage);
+
+    return chat;
 } 
-export const getAllMyChats = async(userId:number) => {
+export const getAllMyChats = async(userId:number):Promise<Array<Chat>> => {
     const result = await pool.query('SELECT * FROM support_chat WHERE user_id = $1',
         [userId]
     )
