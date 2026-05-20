@@ -12,6 +12,8 @@ if(process.env.NODE_ENV !== 'test') {
 }
 
 import userRoutes from './routes/user.route';
+import chatRoutes from './routes/chat.route';
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/chats', chatRoutes)
 
 export default app;
