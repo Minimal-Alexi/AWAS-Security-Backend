@@ -27,6 +27,10 @@ export const createMessage = async(req:Request, res:Response) => {
             return res.status(404)
         }
 
+        if(user.id != chat.userId){
+            return res.status(403);
+        }
+
         const message = await createMessageForChat(chatId,user,req.body.text);
         return res.status(201).json({message:"Successfully created message.", supportMessage: message.toJSON()})
 
