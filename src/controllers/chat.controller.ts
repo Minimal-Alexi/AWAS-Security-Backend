@@ -24,11 +24,11 @@ export const createMessage = async(req:Request, res:Response) => {
         const user = await findUserById(userId)
         const chat = await findChatById(chatId)
         if(!user || !chat){
-            return res.status(404)
+            return res.status(404).json({message:"Not Found"});
         }
 
         if(user.id != chat.userId){
-            return res.status(403);
+            return res.status(403).json({message:"Unauth"});;
         }
 
         const message = await createMessageForChat(chatId,user,req.body.text);
@@ -48,6 +48,20 @@ export const createAdminMessage = async(req:Request, res:Response) => {
 }
 export const getMySupportChatById = async(req:Request, res:Response) => {
     try{
+        const userId = req.body.userID;
+        const chatId = Number(req.params.supportChatId);
+        const user = await findUserById(userId)
+        const chat = await findChatById(chatId)
+        console.log(user, chat);
+        if (!user || !chat) {
+            return res.status(404).json({message:"Not Found"});
+        }
+
+        if (user.id != chat.userId && !user.admin) {
+            return res.status(403).json({message:"Unauth"});;
+        }
+
+        return res.status(200).json({message:"Successfully found chat", supportChat:chat.toJSON()});
 
     }catch(error){
         return res.status(500).json({error:"Server error."})
