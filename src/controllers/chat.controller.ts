@@ -41,7 +41,7 @@ export const getMySupportChats = async(req:Request, res:Response) => {
     try{
         const userId = req.body.userID;
         const supportChats = await getAllMyChats(userId);
-        return res.status(200).json({message:"Successfully found chats.", supportChats: supportChats.map((chat) => {chat.toJSON})})
+        return res.status(200).json({message:"Successfully found chats.", supportChats: supportChats.map((chat) => chat.toJSON())})
     }catch(error){
         return res.status(500).json({error:"Server error."})
     }
