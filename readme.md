@@ -7,8 +7,7 @@ This is the backend API made for the AWAS course at Metropolia. The goal is to m
 * Session Management Attacks - The backend will only return the users ID,instead of a JSONWebToken, meaning that users can edit their own tokens in order to access other users valuable data.
 * XSS Attacks - A support forum will be used in order to allow for XSS attacks.
 
-This is the backend repository, the frontend repository is below:
-link
+This is the backend repository, the frontend repository is [here](https://github.com/VitaliiVIP/AWAS-frontend).
 
 ## Tech Stack
 
