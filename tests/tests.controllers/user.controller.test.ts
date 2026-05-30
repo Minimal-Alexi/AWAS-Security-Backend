@@ -1,5 +1,4 @@
 import bcrypt from 'bcrypt';
-import { NR_OF_SALTING_ROUNDS } from "../../src/config/constants";
 import app from '../../src/app';
 import supertest from 'supertest';
 
@@ -20,8 +19,8 @@ beforeEach(async () => {
   await pool.query(`
     INSERT INTO users (first_name,last_name, email, password,valuation,admin)
     VALUES
-      ('testerson', 'b', 'test1@example.com', '${bcrypt.hashSync('password1', NR_OF_SALTING_ROUNDS).toString()}', '5000', 'false'),
-      ('testerina', 'b', 'test2@example.com', '${bcrypt.hashSync('password2', NR_OF_SALTING_ROUNDS).toString()}', '5000', 'false');
+      ('testerson', 'b', 'test1@example.com', '${bcrypt.hashSync('password1', 10).toString()}', '5000', 'false'),
+      ('testerina', 'b', 'test2@example.com', '${bcrypt.hashSync('password2', 10).toString()}', '5000', 'false');
   `);
 });
 
