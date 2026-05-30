@@ -3,15 +3,12 @@ import { findUserByEmail, createUser, findUserById, moveMoney } from '../service
 import bcrypt from 'bcrypt';
 
 const registerUser = async (req: Request, res: Response) => {
-    const { firstName, lastName, email, password, valuation, admin } = req.body;
+    const { firstName, lastName, email, password, valuation } = req.body;
     try {
         if (!firstName || !lastName || !email || !password || !valuation) {
             return res.status(400).json({ "message": "Username, email and password are required" });
         }
-        let isAdmin = true;
-        if(!admin){
-            isAdmin = false;
-        }
+        const isAdmin = false; // admin status is never set by the client
 
         if (await findUserByEmail(email)) {
             return res.status(400).json({ "message": "User with this email already exists" });

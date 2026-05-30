@@ -32,8 +32,8 @@ CREATE TABLE message (
     CONSTRAINT fk_message_chat
         FOREIGN KEY (support_chat_id)
         REFERENCES support_chat(support_chat_id)
-        ON DELETE CASCADE
-    
+        ON DELETE CASCADE,
+
     CONSTRAINT fk_message_user
         FOREIGN KEY (user_id)
         REFERENCES users(user_id)
